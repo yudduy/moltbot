@@ -124,7 +124,7 @@ export default function ReceiptDetail({ receipt, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="receipt-detail-title"
-        className="fixed inset-y-0 right-0 w-[420px] max-w-full bg-neutral-900 border-l border-neutral-800 z-50 overflow-y-auto"
+        className="fixed inset-y-0 right-0 w-[420px] max-w-full bg-neutral-900 border-l border-neutral-800 z-50 overflow-y-auto [overscroll-behavior:contain]"
       >
         <div key={receipt.id} className="p-5">
           <div className="flex items-center justify-between mb-5">
@@ -167,7 +167,7 @@ export default function ReceiptDetail({ receipt, onClose }: Props) {
             </div>
             <div>
               <div className="text-xs text-neutral-400">Duration</div>
-              <div className="text-sm">{formatDuration(receipt.durationMs)}</div>
+              <div className="text-sm" style={{ fontVariantNumeric: "tabular-nums" }}>{formatDuration(receipt.durationMs)}</div>
             </div>
             <div>
               <div className="text-xs text-neutral-400">Session</div>

@@ -77,10 +77,10 @@ function SessionCard({
           )}
           aria-hidden="true"
         />
-        <span className="font-mono text-xs truncate flex-1 text-neutral-300">
+        <span className="font-mono text-xs truncate flex-1 min-w-0 text-neutral-300">
           {group.sessionKey}
         </span>
-        <span className="text-xs text-neutral-400 bg-neutral-800 rounded-full px-2 py-0.5">
+        <span className="text-xs text-neutral-400 bg-neutral-800 rounded-full px-2 py-0.5" style={{ fontVariantNumeric: "tabular-nums" }}>
           {group.receipts.length}
         </span>
         <span className="text-xs text-neutral-400">

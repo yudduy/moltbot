@@ -12,12 +12,32 @@ import SessionView from "./components/SessionView";
 
 const LIMIT = 50;
 
+function getSearchParams() {
+  return new URLSearchParams(window.location.search);
+}
+
+function setSearchParams(params: Record<string, string>) {
+  const url = new URL(window.location.href);
+  for (const [k, v] of Object.entries(params)) {
+    if (v) url.searchParams.set(k, v);
+    else url.searchParams.delete(k);
+  }
+  window.history.replaceState({}, "", url.toString());
+}
+
 export default function App() {
-  const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
-  const [anomalyOnly, setAnomalyOnly] = useState(false);
+  const initialParams = getSearchParams();
+  const [selectedTiers, setSelectedTiers] = useState<string[]>(() => {
+    const tiers = initialParams.get("tiers");
+    return tiers ? tiers.split(",").filter(Boolean) : [];
+  });
+  const [anomalyOnly, setAnomalyOnly] = useState(() => initialParams.get("anomalies") === "1");
   const [allReceipts, setAllReceipts] = useState<ActionReceipt[]>([]);
   const [selectedReceipt, setSelectedReceipt] = useState<ActionReceipt | null>(null);
-  const [viewMode, setViewMode] = useState<"list" | "sessions">("list");
+  const [viewMode, setViewMode] = useState<"list" | "sessions">(() => {
+    const view = initialParams.get("view");
+    return view === "sessions" ? "sessions" : "list";
+  });
   const [hasMore, setHasMore] = useState(false);
   const [loadedCount, setLoadedCount] = useState(0);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -26,6 +46,19 @@ export default function App() {
 
   const { stats, isLoading: statsLoading, error: statsError } = useStats();
   const { receipts, isLoading: receiptsLoading, error: receiptsError } = useReceipts(LIMIT, 0);
+
+  // Sync URL with state changes
+  useEffect(() => {
+    setSearchParams({ view: viewMode === "list" ? "" : viewMode });
+  }, [viewMode]);
+
+  useEffect(() => {
+    setSearchParams({ tiers: selectedTiers.join(",") });
+  }, [selectedTiers]);
+
+  useEffect(() => {
+    setSearchParams({ anomalies: anomalyOnly ? "1" : "" });
+  }, [anomalyOnly]);
 
   // Polling: merge new receipts at the top, do NOT touch loadedCount or hasMore
   useEffect(() => {
@@ -82,9 +115,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bg-neutral-800 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
+        Skip to main content
+      </a>
       <Header />
       <Sidebar />
-      <main className="pt-14 pl-0 lg:pl-56 p-6">
+      <main id="main-content" className="pt-14 pl-0 lg:pl-56 p-6">
         <div className="max-w-6xl mx-auto space-y-6 pt-6">
           <StatsCards stats={stats} isLoading={statsLoading} error={statsError} />
 

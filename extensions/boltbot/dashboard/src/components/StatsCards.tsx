@@ -45,7 +45,7 @@ export default function StatsCards({ stats, isLoading, error }: Props) {
           {isLoading && !stats ? (
             <div className="h-8 w-16 animate-pulse bg-neutral-800 rounded" />
           ) : (
-            <div className="text-2xl font-bold">{getValue(stats, card.key)}</div>
+            <div className="text-2xl font-bold" style={{ fontVariantNumeric: "tabular-nums" }}>{getValue(stats, card.key)}</div>
           )}
         </div>
       ))}

@@ -39,7 +39,7 @@ export default function ReceiptList({
 
   if (isLoading && receipts.length === 0) {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2" aria-live="polite">
         {Array.from({ length: 5 }).map((_, i) => (
           <div key={i} className="h-10 animate-pulse bg-neutral-800 rounded-lg" />
         ))}
@@ -85,7 +85,7 @@ export default function ReceiptList({
                 : "hover:bg-neutral-800/30 border-l-2 border-transparent",
             )}
           >
-            <span role="cell" className="text-sm font-mono truncate">{r.toolName}</span>
+            <span role="cell" className="text-sm font-mono truncate min-w-0">{r.toolName}</span>
             <span role="cell">
               <span className={cn("rounded-full px-2 py-0.5 text-xs", tierBadge[r.tier])}>
                 {r.tier}
@@ -119,7 +119,7 @@ export default function ReceiptList({
               loadingMore ? "opacity-50 cursor-not-allowed" : "hover:bg-neutral-700",
             )}
           >
-            {loadingMore ? "Loading..." : "Load More"}
+            {loadingMore ? "Loading…" : "Load More"}
           </button>
         </div>
       )}
