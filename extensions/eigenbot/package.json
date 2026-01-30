@@ -1,8 +1,8 @@
 {
-  "name": "@boltbot/extension",
+  "name": "@eigenbot/extension",
   "version": "0.1.0",
   "type": "module",
-  "description": "Boltbot — Trustless Moltbot hosting via EigenCloud",
+  "description": "Eigenbot — Trustless Moltbot hosting via EigenCloud",
   "moltbot": {
     "extensions": ["./index.ts"]
   },

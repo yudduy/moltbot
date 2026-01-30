@@ -37,18 +37,18 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
   const query = parseQuery(req.url ?? "");
 
   try {
-    if (path === "/boltbot/receipts") {
+    if (path === "/eigenbot/receipts") {
       const limit = Math.min(Math.max(parseInt(query.limit ?? "50", 10) || 50, 1), 500);
       const offset = Math.max(parseInt(query.offset ?? "0", 10) || 0, 0);
       const receipts = await store.list({ limit, offset });
       json(res, 200, { receipts });
-    } else if (path === "/boltbot/receipt") {
+    } else if (path === "/eigenbot/receipt") {
       const id = query.id;
       if (!id) return json(res, 400, { error: "missing_id" });
       const receipt = await store.get(id);
       if (!receipt) return json(res, 404, { error: "not_found" });
       json(res, 200, { receipt });
-    } else if (path === "/boltbot/stats") {
+    } else if (path === "/eigenbot/stats") {
       const stats = await store.stats();
       json(res, 200, stats);
     } else {
@@ -61,5 +61,5 @@ const server = createServer(async (req: IncomingMessage, res: ServerResponse) =>
 });
 
 server.listen(PORT, () => {
-  console.log(`boltbot dev server: http://localhost:${PORT}`);
+  console.log(`eigenbot dev server: http://localhost:${PORT}`);
 });

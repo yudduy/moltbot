@@ -31,12 +31,12 @@ function createMockApi() {
   return { mockApi, getCommand: () => registeredCommand };
 }
 
-describe("boltbot plugin integration", () => {
+describe("eigenbot plugin integration", () => {
   it("plugin has correct id and name", async () => {
     const mod = await import("../../index.js");
     const plugin = mod.default;
-    expect(plugin.id).toBe("boltbot");
-    expect(plugin.name).toBe("Boltbot — Audit Dashboard");
+    expect(plugin.id).toBe("eigenbot");
+    expect(plugin.name).toBe("Eigenbot — Audit Dashboard");
   });
 
   it("register wires provider, hook, and routes", async () => {
@@ -65,10 +65,10 @@ describe("boltbot plugin integration", () => {
 
     expect(registered.routes).toHaveLength(4);
     const paths = registered.routes.map((r: any) => r.path);
-    expect(paths).toContain("/boltbot/receipts");
-    expect(paths).toContain("/boltbot/receipt");
-    expect(paths).toContain("/boltbot/stats");
-    expect(paths).toContain("/boltbot/dashboard");
+    expect(paths).toContain("/eigenbot/receipts");
+    expect(paths).toContain("/eigenbot/receipt");
+    expect(paths).toContain("/eigenbot/stats");
+    expect(paths).toContain("/eigenbot/dashboard");
   });
 
   it("after_tool_call hook fires and creates receipt", async () => {
@@ -86,7 +86,6 @@ describe("boltbot plugin integration", () => {
     plugin.register(mockApi as any);
     expect(hookHandler).toBeDefined();
 
-    // Fire the hook -- should not throw
     await hookHandler(
       { toolName: "exec", params: { command: "ls" }, durationMs: 10 },
       { sessionKey: "test-sess", toolName: "exec" },
@@ -107,7 +106,6 @@ describe("boltbot plugin integration", () => {
 
     plugin.register(mockApi as any);
 
-    // web_search is low tier -- should not throw or store
     await hookHandler(
       { toolName: "web_search", params: { q: "test" }, durationMs: 5 },
       { sessionKey: "test-sess", toolName: "web_search" },
@@ -135,7 +133,7 @@ describe("boltbot plugin integration", () => {
     plugin.register(mockApi as any);
 
     const result = await getCommand().handler({});
-    expect(result.text).toContain("Boltbot Audit Dashboard");
+    expect(result.text).toContain("Eigenbot Audit Dashboard");
     expect(result.text).toContain("actions");
     expect(result.text).toContain("anomalies");
   });

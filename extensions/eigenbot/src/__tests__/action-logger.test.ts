@@ -109,7 +109,6 @@ describe("action-logger", () => {
       async stats() { return { total: 0, byTier: {}, anomalyCount: 0 }; },
     };
     const failLogger = createActionLogger(failStore);
-    // Should not throw
     await failLogger(
       { toolName: "exec", params: { command: "ls" }, durationMs: 1 },
       { sessionKey: "s", toolName: "exec" },

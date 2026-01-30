@@ -79,7 +79,7 @@ export default function App() {
     if (loadingMore) return;
     setLoadingMore(true);
     setLoadMoreError(null);
-    fetch(`/boltbot/receipts?limit=${LIMIT}&offset=${loadedCount}`)
+    fetch(`/eigenbot/receipts?limit=${LIMIT}&offset=${loadedCount}`)
       .then((r) => {
         if (!r.ok) throw new Error(r.statusText);
         return r.json();
@@ -164,6 +164,7 @@ export default function App() {
               hasMore={hasMore}
               onLoadMore={handleLoadMore}
               loadingMore={loadingMore}
+              loadMoreError={loadMoreError}
             />
           ) : (
             <SessionView

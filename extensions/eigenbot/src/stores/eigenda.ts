@@ -5,7 +5,7 @@ export class EigenDAReceiptStore implements ReceiptStore {
   private proxyUrl: string;
   private localIndex: LocalReceiptStore;
 
-  constructor(proxyUrl: string, dbPath = "boltbot-eigenda-index.db") {
+  constructor(proxyUrl: string, dbPath = "eigenbot-eigenda-index.db") {
     this.proxyUrl = proxyUrl;
     this.localIndex = new LocalReceiptStore(dbPath);
   }
@@ -21,8 +21,8 @@ export class EigenDAReceiptStore implements ReceiptStore {
       if (res.ok) {
         receipt.daCommitment = Buffer.from(await res.arrayBuffer()).toString("hex");
       }
-    } catch {
-      // DA failure is non-fatal
+    } catch (err) {
+      console.warn("EigenDA put failed (non-fatal):", err);
     }
 
     await this.localIndex.put(receipt);

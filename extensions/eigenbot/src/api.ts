@@ -20,9 +20,9 @@ function parseQuery(url: string): Record<string, string> {
   return Object.fromEntries(params.entries());
 }
 
-export function registerBoltbotApi(api: PluginApi, store: ReceiptStore) {
+export function registerEigenbotApi(api: PluginApi, store: ReceiptStore) {
   api.registerHttpRoute({
-    path: "/boltbot/receipts",
+    path: "/eigenbot/receipts",
     handler: async (req, res) => {
       const query = parseQuery(req.url ?? "");
       const limit = Math.min(Math.max(parseInt(query.limit ?? "50", 10) || 50, 1), 500);
@@ -33,7 +33,7 @@ export function registerBoltbotApi(api: PluginApi, store: ReceiptStore) {
   });
 
   api.registerHttpRoute({
-    path: "/boltbot/receipt",
+    path: "/eigenbot/receipt",
     handler: async (req, res) => {
       const query = parseQuery(req.url ?? "");
       const id = query.id;
@@ -51,7 +51,7 @@ export function registerBoltbotApi(api: PluginApi, store: ReceiptStore) {
   });
 
   api.registerHttpRoute({
-    path: "/boltbot/stats",
+    path: "/eigenbot/stats",
     handler: async (_req, res) => {
       const stats = await store.stats();
       jsonResponse(res, 200, stats);

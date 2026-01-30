@@ -12,6 +12,7 @@ interface Props {
   hasMore: boolean;
   onLoadMore: () => void;
   loadingMore?: boolean;
+  loadMoreError?: string | null;
 }
 
 const tierBadge: Record<string, string> = {
@@ -29,6 +30,7 @@ export default function ReceiptList({
   hasMore,
   onLoadMore,
   loadingMore = false,
+  loadMoreError,
 }: Props) {
   if (receipts.length === 0) {
     return <OnboardingCard isLoading={isLoading} error={error} />;
@@ -88,6 +90,11 @@ export default function ReceiptList({
           </div>
         ))}
       </div>
+      {loadMoreError && (
+        <p className="pt-2 text-center text-xs text-red-400" role="alert">
+          Failed to load more: {loadMoreError}
+        </p>
+      )}
       {hasMore && (
         <div className="pt-4 flex justify-center">
           <button

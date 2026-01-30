@@ -39,7 +39,6 @@ describe("EigenDAReceiptStore", () => {
         req.on("data", (chunk) => chunks.push(chunk));
         req.on("end", () => {
           lastRequestBody = Buffer.concat(chunks);
-          // Return a mock commitment (binary data)
           const commitment = Buffer.from("deadbeef0123", "hex");
           res.writeHead(200);
           res.end(commitment);
@@ -85,7 +84,6 @@ describe("EigenDAReceiptStore", () => {
     const store = new EigenDAReceiptStore(proxyUrl, ":memory:");
     const receipt = makeReceipt();
 
-    // Should not throw
     await store.put(receipt);
 
     const retrieved = await store.get(receipt.id);

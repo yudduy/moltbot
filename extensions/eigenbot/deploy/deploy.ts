@@ -18,14 +18,14 @@ function required(name: string): string {
 async function main() {
   const privateKey = required("ECLOUD_PRIVATE_KEY");
   const environment = process.env.ECLOUD_ENVIRONMENT ?? "sepolia";
-  const appName = process.env.ECLOUD_APP_NAME ?? "boltbot";
+  const appName = process.env.ECLOUD_APP_NAME ?? "eigenbot";
   const instanceType = process.env.ECLOUD_INSTANCE_TYPE ?? "e2-medium";
 
   const envVars: Record<string, string> = {
     EIGENCLOUD_API_KEY: required("EIGENCLOUD_API_KEY"),
     TELEGRAM_BOT_TOKEN: required("TELEGRAM_BOT_TOKEN"),
-    BOLTBOT_RECEIPT_BACKEND: process.env.BOLTBOT_RECEIPT_BACKEND ?? "eigenda",
-    NODE_ENV_PUBLIC: "production",
+    EIGENBOT_RECEIPT_BACKEND: process.env.EIGENBOT_RECEIPT_BACKEND ?? "eigenda",
+    NODE_ENV: "production",
   };
   if (process.env.EIGENDA_PROXY_URL) {
     envVars.EIGENDA_PROXY_URL = process.env.EIGENDA_PROXY_URL;
@@ -38,7 +38,7 @@ async function main() {
   console.log("[1/3] Building Docker image...");
   execFileSync("docker", [
     "build", "-t", `${appName}:latest`,
-    "-f", "extensions/boltbot/deploy/Dockerfile", ".",
+    "-f", "extensions/eigenbot/deploy/Dockerfile", ".",
   ], { cwd: projectRoot, stdio: "inherit" });
 
   console.log("[2/3] Deploying to EigenCompute TEE...");
@@ -48,7 +48,7 @@ async function main() {
     "--name", appName,
     "--instance-type", instanceType,
     "--environment", environment,
-    "--dockerfile", "extensions/boltbot/deploy/Dockerfile",
+    "--dockerfile", "extensions/eigenbot/deploy/Dockerfile",
     ...envFlags,
   ], { cwd: projectRoot, stdio: "inherit", env: ecloudEnv });
 
