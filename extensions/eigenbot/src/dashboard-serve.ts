@@ -26,10 +26,10 @@ const CONTENT_TYPES: Record<string, string> = {
 
 export function registerDashboardRoutes(api: PluginApi) {
   api.registerHttpRoute({
-    path: "/boltbot/dashboard",
+    path: "/eigenbot/dashboard",
     handler: (req, res) => {
       const url = req.url ?? "/";
-      const basePath = "/boltbot/dashboard";
+      const basePath = "/eigenbot/dashboard";
       const idx = url.indexOf(basePath);
       let filePath = idx !== -1 ? url.slice(idx + basePath.length) : "/";
 

@@ -11,7 +11,7 @@ const fetcher = (url: string) =>
 
 export function useStats() {
   const { data, isLoading, error } = useSWR<ReceiptStats>(
-    "/boltbot/stats",
+    "/eigenbot/stats",
     fetcher,
     { refreshInterval: 10000, keepPreviousData: true },
   );
@@ -20,7 +20,7 @@ export function useStats() {
 
 export function useReceipts(limit: number, offset: number) {
   const { data, isLoading, error } = useSWR<{ receipts: ActionReceipt[] }>(
-    `/boltbot/receipts?limit=${limit}&offset=${offset}`,
+    `/eigenbot/receipts?limit=${limit}&offset=${offset}`,
     fetcher,
     { refreshInterval: 10000, keepPreviousData: true },
   );

@@ -10,7 +10,7 @@ export class LocalReceiptStore implements ReceiptStore {
   static defaultDbPath(): string {
     const dir = join(homedir(), ".clawdbot", "data");
     mkdirSync(dir, { recursive: true });
-    return join(dir, "boltbot-receipts.db");
+    return join(dir, "eigenbot-receipts.db");
   }
 
   constructor(dbPath?: string) {

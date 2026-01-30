@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { registerBoltbotApi } from "../api.js";
+import { registerEigenbotApi } from "../api.js";
 import type { ActionReceipt, ReceiptStore } from "../receipt-store.js";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
@@ -73,62 +73,62 @@ describe("Dashboard API", () => {
   beforeEach(() => {
     api = makeApi();
     store = makeStore([sampleReceipt]);
-    registerBoltbotApi(api as any, store);
+    registerEigenbotApi(api as any, store);
   });
 
   it("registers 3 routes", () => {
     expect(api.routes).toHaveLength(3);
   });
 
-  describe("/boltbot/receipts", () => {
+  describe("/eigenbot/receipts", () => {
     it("returns receipts list", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/receipts")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/receipts")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/receipts"), res);
+      await route.handler(mockReq("/eigenbot/receipts"), res);
       expect(res.statusCode).toBe(200);
       const data = res.json();
       expect(data.receipts).toHaveLength(1);
     });
 
     it("respects pagination params", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/receipts")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/receipts")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/receipts?limit=5&offset=0"), res);
+      await route.handler(mockReq("/eigenbot/receipts?limit=5&offset=0"), res);
       expect(res.statusCode).toBe(200);
     });
   });
 
-  describe("/boltbot/receipt", () => {
+  describe("/eigenbot/receipt", () => {
     it("returns receipt by id", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/receipt")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/receipt")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/receipt?id=test-id-1"), res);
+      await route.handler(mockReq("/eigenbot/receipt?id=test-id-1"), res);
       expect(res.statusCode).toBe(200);
       expect(res.json().receipt.id).toBe("test-id-1");
     });
 
     it("returns 400 for missing id", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/receipt")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/receipt")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/receipt"), res);
+      await route.handler(mockReq("/eigenbot/receipt"), res);
       expect(res.statusCode).toBe(400);
       expect(res.json().error).toBe("missing_id");
     });
 
     it("returns 404 for nonexistent id", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/receipt")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/receipt")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/receipt?id=nonexistent"), res);
+      await route.handler(mockReq("/eigenbot/receipt?id=nonexistent"), res);
       expect(res.statusCode).toBe(404);
       expect(res.json().error).toBe("not_found");
     });
   });
 
-  describe("/boltbot/stats", () => {
+  describe("/eigenbot/stats", () => {
     it("returns stats", async () => {
-      const route = api.routes.find((r) => r.path === "/boltbot/stats")!;
+      const route = api.routes.find((r) => r.path === "/eigenbot/stats")!;
       const res = mockRes();
-      await route.handler(mockReq("/boltbot/stats"), res);
+      await route.handler(mockReq("/eigenbot/stats"), res);
       expect(res.statusCode).toBe(200);
       const data = res.json();
       expect(data.total).toBe(1);
