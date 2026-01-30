@@ -1,11 +1,20 @@
 import Database from "better-sqlite3";
+import { homedir } from "node:os";
+import { join } from "node:path";
+import { mkdirSync } from "node:fs";
 import type { ActionReceipt, ReceiptStore } from "../receipt-store.js";
 
 export class LocalReceiptStore implements ReceiptStore {
   private db: Database.Database;
 
-  constructor(dbPath = "boltbot-receipts.db") {
-    this.db = new Database(dbPath);
+  static defaultDbPath(): string {
+    const dir = join(homedir(), ".clawdbot", "data");
+    mkdirSync(dir, { recursive: true });
+    return join(dir, "boltbot-receipts.db");
+  }
+
+  constructor(dbPath?: string) {
+    this.db = new Database(dbPath ?? LocalReceiptStore.defaultDbPath());
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS receipts (
         id TEXT PRIMARY KEY,

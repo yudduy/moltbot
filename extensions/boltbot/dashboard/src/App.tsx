@@ -169,6 +169,8 @@ export default function App() {
             <SessionView
               receipts={filtered}
               onSelectReceipt={setSelectedReceipt}
+              isLoading={receiptsLoading}
+              error={receiptsError}
             />
           )}
         </div>

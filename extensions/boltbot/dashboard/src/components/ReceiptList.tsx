@@ -1,6 +1,7 @@
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import type { ActionReceipt } from "../types";
 import { cn, formatRelativeTime } from "../utils";
+import OnboardingCard from "./OnboardingCard";
 
 interface Props {
   receipts: ActionReceipt[];
@@ -29,30 +30,8 @@ export default function ReceiptList({
   onLoadMore,
   loadingMore = false,
 }: Props) {
-  if (error) {
-    return (
-      <div className="text-red-400 text-sm p-4">
-        Failed to load receipts: {error instanceof Error ? error.message : "Unknown error"}
-      </div>
-    );
-  }
-
-  if (isLoading && receipts.length === 0) {
-    return (
-      <div className="flex flex-col gap-2" aria-live="polite">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-10 animate-pulse bg-neutral-800 rounded-lg" />
-        ))}
-      </div>
-    );
-  }
-
   if (receipts.length === 0) {
-    return (
-      <div className="text-neutral-400 text-sm text-center py-12">
-        No actions recorded yet. Receipts appear here when your agent uses tools.
-      </div>
-    );
+    return <OnboardingCard isLoading={isLoading} error={error} />;
   }
 
   return (

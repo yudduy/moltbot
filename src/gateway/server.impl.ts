@@ -482,6 +482,7 @@ export async function startGatewayServer(
     tlsEnabled: gatewayTls.enabled,
     log,
     isNixMode,
+    loadedPluginIds: pluginRegistry.plugins.filter((p) => p.status === "loaded").map((p) => p.id),
   });
   scheduleGatewayUpdateCheck({ cfg: cfgAtStart, log, isNixMode });
   const tailscaleCleanup = await startGatewayTailscaleExposure({

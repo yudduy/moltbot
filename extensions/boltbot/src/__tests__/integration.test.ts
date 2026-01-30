@@ -20,6 +20,17 @@ vi.mock("better-sqlite3", () => {
   return { default: MockDatabase };
 });
 
+function createMockApi() {
+  let registeredCommand: any;
+  const mockApi = {
+    registerProvider: vi.fn(),
+    on: vi.fn(),
+    registerHttpRoute: vi.fn(),
+    registerCommand: vi.fn((cmd: any) => { registeredCommand = cmd; }),
+  };
+  return { mockApi, getCommand: () => registeredCommand };
+}
+
 describe("boltbot plugin integration", () => {
   it("plugin has correct id and name", async () => {
     const mod = await import("../../index.js");
@@ -42,18 +53,16 @@ describe("boltbot plugin integration", () => {
       registerProvider: vi.fn((p: any) => registered.providers.push(p)),
       on: vi.fn((name: string, handler: any) => registered.hooks.push({ name, handler })),
       registerHttpRoute: vi.fn((r: any) => registered.routes.push(r)),
+      registerCommand: vi.fn(),
     };
 
     plugin.register(mockApi as any);
 
-    // No provider in audit-only mode
     expect(registered.providers).toHaveLength(0);
 
-    // after_tool_call hook registered
     expect(registered.hooks).toHaveLength(1);
     expect(registered.hooks[0].name).toBe("after_tool_call");
 
-    // 4 HTTP routes: receipts, receipt, stats, dashboard
     expect(registered.routes).toHaveLength(4);
     const paths = registered.routes.map((r: any) => r.path);
     expect(paths).toContain("/boltbot/receipts");
@@ -71,6 +80,7 @@ describe("boltbot plugin integration", () => {
       registerProvider: vi.fn(),
       on: vi.fn((_name: string, handler: any) => { hookHandler = handler; }),
       registerHttpRoute: vi.fn(),
+      registerCommand: vi.fn(),
     };
 
     plugin.register(mockApi as any);
@@ -92,6 +102,7 @@ describe("boltbot plugin integration", () => {
       registerProvider: vi.fn(),
       on: vi.fn((_name: string, handler: any) => { hookHandler = handler; }),
       registerHttpRoute: vi.fn(),
+      registerCommand: vi.fn(),
     };
 
     plugin.register(mockApi as any);
@@ -101,5 +112,31 @@ describe("boltbot plugin integration", () => {
       { toolName: "web_search", params: { q: "test" }, durationMs: 5 },
       { sessionKey: "test-sess", toolName: "web_search" },
     );
+  });
+
+  it("registers /audit command", async () => {
+    const mod = await import("../../index.js");
+    const plugin = mod.default;
+    const { mockApi, getCommand } = createMockApi();
+
+    plugin.register(mockApi as any);
+
+    const cmd = getCommand();
+    expect(cmd).toBeDefined();
+    expect(cmd.name).toBe("audit");
+    expect(cmd.requireAuth).toBe(true);
+  });
+
+  it("/audit command returns stats", async () => {
+    const mod = await import("../../index.js");
+    const plugin = mod.default;
+    const { mockApi, getCommand } = createMockApi();
+
+    plugin.register(mockApi as any);
+
+    const result = await getCommand().handler({});
+    expect(result.text).toContain("Boltbot Audit Dashboard");
+    expect(result.text).toContain("actions");
+    expect(result.text).toContain("anomalies");
   });
 });

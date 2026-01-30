@@ -12,6 +12,7 @@ export function logGatewayStartup(params: {
   tlsEnabled?: boolean;
   log: { info: (msg: string, meta?: Record<string, unknown>) => void };
   isNixMode: boolean;
+  loadedPluginIds?: string[];
 }) {
   const { provider: agentProvider, model: agentModel } = resolveConfiguredModelRef({
     cfg: params.cfg,
@@ -36,5 +37,12 @@ export function logGatewayStartup(params: {
   params.log.info(`log file: ${getResolvedLoggerSettings().file}`);
   if (params.isNixMode) {
     params.log.info("gateway: running in Nix mode (config managed externally)");
+  }
+  if (params.loadedPluginIds?.includes("boltbot")) {
+    const httpScheme = params.tlsEnabled ? "https" : "http";
+    const dashboardUrl = `${httpScheme}://${formatHost(primaryHost)}:${params.port}/boltbot/dashboard/`;
+    params.log.info(`boltbot dashboard: ${dashboardUrl}`, {
+      consoleMessage: `boltbot dashboard: ${chalk.cyan(dashboardUrl)}`,
+    });
   }
 }

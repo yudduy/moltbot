@@ -2,10 +2,13 @@ import { useMemo, useState } from "react";
 import { ChevronDown, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import type { ActionReceipt } from "../types";
 import { cn, formatRelativeTime } from "../utils";
+import OnboardingCard from "./OnboardingCard";
 
 interface Props {
   receipts: ActionReceipt[];
   onSelectReceipt: (r: ActionReceipt) => void;
+  isLoading: boolean;
+  error: unknown;
 }
 
 const tierBadge: Record<string, string> = {
@@ -156,15 +159,11 @@ function SessionCard({
   );
 }
 
-export default function SessionView({ receipts, onSelectReceipt }: Props) {
+export default function SessionView({ receipts, onSelectReceipt, isLoading, error }: Props) {
   const groups = useMemo(() => groupBySession(receipts), [receipts]);
 
   if (groups.length === 0) {
-    return (
-      <div className="text-neutral-400 text-sm text-center py-12">
-        No sessions recorded yet. Sessions appear here when your agent processes conversations.
-      </div>
-    );
+    return <OnboardingCard isLoading={isLoading} error={error} />;
   }
 
   return (
